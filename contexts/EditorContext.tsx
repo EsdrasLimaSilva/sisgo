@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState, createContext } from "react";
+import { ReactNode, useState, createContext, useCallback } from "react";
 
 /**
  * Entities are the elements of the editor. They hava a type and a content representing a HTML tag an its text content
@@ -11,53 +11,67 @@ export interface Entity {
     content: string;
 }
 
-interface ContextProps {
+interface PostEntity {
+    title: string;
+    metadescription: string;
+    tags: string[];
     entities: Entity[];
+}
+
+interface ContextProps {
+    postEntity: PostEntity;
     changeContent: (id: string, newContent: string) => void;
 }
 
 export const EditorContext = createContext<ContextProps | undefined>(undefined);
 
 const EditorProvider = ({ children }: { children: ReactNode }) => {
-    const [editorState, setEditorState] = useState<Entity[]>([
-        {
-            id: "1",
-            type: "h1",
-            content: "Hello World",
-        },
+    const [editorState, setEditorState] = useState<PostEntity>({
+        title: "Post 1",
+        metadescription: "este é o post de teste",
+        tags: ["tag1", "tag2", "tag3"],
+        entities: [
+            {
+                id: "1",
+                type: "h1",
+                content: "Hello World",
+            },
 
-        {
-            id: "2",
-            type: "h2",
-            content: "Hello World",
-        },
+            {
+                id: "2",
+                type: "h2",
+                content: "Hello World",
+            },
 
-        {
-            id: "3",
-            type: "p",
-            content:
-                "Hão de chorar por ela os cinamomos, murchando as flores ao tombar do dia",
-        },
-    ]);
+            {
+                id: "3",
+                type: "p",
+                content:
+                    "Hão de chorar por ela os cinamomos, murchando as flores ao tombar do dia",
+            },
+        ],
+    });
 
     /**
      * This functions changes some entity on editor state
      * @param id the entity id that it's being modified
      * @param newContent the new content
      */
-    const changeContent = (id: string, newContent: string) => {
+    const changeContent = useCallback((id: string, newContent: string) => {
         setEditorState((prevState) => {
-            const posts = prevState;
-            const changedIndex = posts.findIndex((post) => post.id === id);
-            posts[changedIndex].content = newContent;
+            const newEntities = prevState.entities;
+            const changedIndex = newEntities.findIndex(
+                (post) => post.id === id
+            );
+            newEntities[changedIndex].content = newContent;
 
-            return posts;
+            return { ...prevState, entities: newEntities };
         });
-    };
+    }, []);
 
     return (
         <EditorContext.Provider
-            value={{ entities: editorState, changeContent }}
+            value={{ postEntity: editorState, changeContent }}
         >
             {children}
         </EditorContext.Provider>
