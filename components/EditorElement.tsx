@@ -1,10 +1,10 @@
 "use client";
 
-import { Post } from "@/contexts/EditorContext";
+import { Entity } from "@/contexts/EditorContext";
 import styles from "@/app/styles/editor.module.scss";
 import { memo } from "react";
 
-const EditorElement = ({ type, content }: Post) => {
+const EditorElement = ({ id, type, content }: Entity) => {
     return (
         <textarea
             key={Math.random() % 100}

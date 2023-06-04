@@ -5,7 +5,7 @@ import { EditorContext } from "@/contexts/EditorContext";
 import EditorElement from "@/components/EditorElement";
 
 export default function Editor() {
-    const { posts } = useContext(EditorContext)!;
+    const { entities } = useContext(EditorContext)!;
 
     return (
         <>
@@ -13,12 +13,12 @@ export default function Editor() {
                 <h1 className="logo-admin">Sisgo</h1>
             </header>
             <main className={styles.container}>
-                {posts.map((post) => (
+                {entities.map((entity) => (
                     <EditorElement
-                        key={post.id}
-                        id={post.id}
-                        type={post.type}
-                        content={post.content}
+                        key={entity.id}
+                        id={entity.id}
+                        type={entity.type}
+                        content={entity.content}
                     />
                 ))}
             </main>
