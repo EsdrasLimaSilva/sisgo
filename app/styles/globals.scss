@@ -1,0 +1,29 @@
+@import "./variables.module.scss";
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", "Arial", "Helvetica", "sans-serif";
+}
+
+html {
+    background: $neutral-100;
+}
+
+header,
+main {
+    padding: 0 8px;
+}
+
+.logo {
+    color: $primary-500;
+    font-weight: 800;
+    font-style: italic;
+    font-size: 1.6rem;
+}
+
+.logo-admin {
+    @extend .logo;
+    color: $action-600;
+}
