@@ -1,25 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useContext } from "react";
 import styles from "@/app/styles/editor.module.scss";
+import { EditorContext } from "@/contexts/EditorContext";
 import EditorElement from "@/components/EditorElement";
 
-export interface Post {
-    type: string;
-    content: string;
-}
-
 export default function Editor() {
-    const [editorState, setEditorState] = useState<Post[]>([
-        {
-            type: "h1",
-            content: "Hello World",
-        },
-
-        {
-            type: "h2",
-            content: "Hello World",
-        },
-    ]);
+    const { posts } = useContext(EditorContext)!;
 
     return (
         <>
@@ -27,11 +13,12 @@ export default function Editor() {
                 <h1 className="logo-admin">Sisgo</h1>
             </header>
             <main className={styles.container}>
-                {editorState.map((i: Post) => (
+                {posts.map((post) => (
                     <EditorElement
-                        key={Math.random() % 100}
-                        type={i.type}
-                        content={i.content}
+                        key={post.id}
+                        id={post.id}
+                        type={post.type}
+                        content={post.content}
                     />
                 ))}
             </main>

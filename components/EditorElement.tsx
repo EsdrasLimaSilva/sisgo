@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/app/admin/editor/page";
+import { Post } from "@/contexts/EditorContext";
 import styles from "@/app/styles/editor.module.scss";
 import { memo } from "react";
 
