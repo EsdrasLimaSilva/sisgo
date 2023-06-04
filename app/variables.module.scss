@@ -1,0 +1,114 @@
+$black: #222222;
+$white: #fcfcfc;
+
+//primary
+$primary-100: #f4f4f6;
+$primary-200: #d6d8ff;
+$primary-300: #7474fb;
+$primary-400: #3f3ff3;
+$primary-500: #2020df;
+$primary-600: #1c1ca0;
+$primary-700: #0d0d72;
+$primary-800: #080844;
+$primary-900: #030317;
+
+//neutral
+$neutral-100: #fafafa;
+$neutral-200: #ebebeb;
+$neutral-300: #b8b8b8;
+$neutral-400: #999999;
+$neutral-500: #808080;
+$neutral-600: #5e5e5e;
+$neutral-700: #404040;
+$neutral-800: #262626;
+$neutral-900: #0d0d0d;
+
+//success
+$success-100: #f4f6f4;
+$success-200: #d6ffdf;
+$success-300: #70ff8f;
+$success-400: #3ff366;
+$success-500: #20df49;
+$success-600: #1ca039;
+$success-700: #0d7223;
+$success-800: #084415;
+$success-800: #031707;
+
+//action
+$action-100: #fff3eb;
+$action-200: #ffe7d6;
+$action-300: #ffa970;
+$action-400: #ff8533;
+$action-500: #ff6600;
+$action-600: #bd4b00;
+$action-700: #803300;
+$action-800: #4d1f00;
+$action-900: #190a00;
+
+//alert
+$alert-100: #ffeceb;
+$alert-200: #ffc6c2;
+$alert-300: #ff7a70;
+$alert-400: #ff4133;
+$alert-500: #ff1100;
+$alert-600: #bd0d00;
+$alert-700: #800900;
+$alert-800: #4d0500;
+$alert-900: #190200;
+
+//exporting all variables
+:export {
+    //primary
+    primary-100: $primary-100;
+    primary-200: $primary-200;
+    primary-300: $primary-300;
+    primary-400: $primary-400;
+    primary-500: $primary-500;
+    primary-600: $primary-600;
+    primary-700: $primary-700;
+    primary-800: $primary-800;
+    primary-900: $primary-900;
+
+    //neutral
+    neutral-100: $neutral-100;
+    neutral-200: $neutral-200;
+    neutral-300: $neutral-300;
+    neutral-400: $neutral-400;
+    neutral-500: $neutral-500;
+    neutral-600: $neutral-600;
+    neutral-700: $neutral-700;
+    neutral-800: $neutral-800;
+    neutral-900: $neutral-900;
+
+    //action
+    action-100: $action-100;
+    action-200: $action-200;
+    action-300: $action-300;
+    action-400: $action-400;
+    action-500: $action-500;
+    action-600: $action-600;
+    action-700: $action-700;
+    action-800: $action-800;
+    action-900: $action-900;
+
+    //succes
+    success-100: $success-100;
+    success-200: $success-200;
+    success-300: $success-300;
+    success-400: $success-400;
+    success-500: $success-500;
+    success-600: $success-600;
+    success-700: $success-700;
+    success-800: $success-800;
+
+    //alert
+    alert-100: $alert-100;
+    alert-200: $alert-200;
+    alert-300: $alert-300;
+    alert-400: $alert-400;
+    alert-500: $alert-500;
+    alert-600: $alert-600;
+    alert-700: $alert-700;
+    alert-800: $alert-800;
+    alert-900: $alert-900;
+}
