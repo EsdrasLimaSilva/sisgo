@@ -31,6 +31,13 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
             type: "h2",
             content: "Hello World",
         },
+
+        {
+            id: "3",
+            type: "p",
+            content:
+                "Hão de chorar por ela os cinamomos, murchando as flores ao tombar do dia",
+        },
     ]);
 
     /**

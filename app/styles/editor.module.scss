@@ -1,16 +1,43 @@
 @import "./variables.module.scss";
 
+@mixin element {
+    @include FLEX(row, center, center, 0);
+    border: 1px solid $neutral-400;
+    background: transparent;
+    padding: 4px;
+    resize: none;
+    width: 100%;
+    font-size: 1rem;
+    color: $primary-800;
+    outline: none;
+    overflow: hidden;
+}
+
 .container {
     @include FLEX(column, center, center, 8px);
-    max-width: 500px;
+    max-width: 640px;
     width: 100%;
     margin: 0 auto;
 }
 
-.element {
-    border: 1px solid $neutral-400;
-    background: $white;
-    padding: 4px;
-    resize: none;
-    height: fit-content;
+.input-h1 {
+    @include element;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.input-h2 {
+    @include element;
+    font-size: 1.2rem;
+}
+
+.input-h3 {
+    @include element;
+    font-size: 1.1;
+}
+
+.input-p {
+    @include element;
+    font-size: 1rem;
+    color: $neutral-800;
 }
