@@ -5,7 +5,8 @@ import { EditorContext } from "@/contexts/EditorContext";
 import EditorElement from "@/components/EditorElement";
 
 export default function Editor() {
-    const { postEntity, changeContent } = useContext(EditorContext)!;
+    const { postEntity, changeContent, changeType } =
+        useContext(EditorContext)!;
 
     return (
         <>
@@ -20,6 +21,7 @@ export default function Editor() {
                         type={entity.type}
                         content={entity.content}
                         changeContent={changeContent}
+                        changeType={changeType}
                     />
                 ))}
             </main>

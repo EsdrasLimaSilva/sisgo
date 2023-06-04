@@ -6,9 +6,16 @@ import { ChangeEvent, memo, useCallback, useEffect, useRef } from "react";
 
 interface Props extends Entity {
     changeContent: (id: string, newContent: string) => void;
+    changeType: (id: string, newType: string) => void;
 }
 
-const EditorElement = ({ id, type, content, changeContent }: Props) => {
+const EditorElement = ({
+    id,
+    type,
+    content,
+    changeContent,
+    changeType,
+}: Props) => {
     const inputRef = useRef(null);
 
     /**
@@ -30,14 +37,27 @@ const EditorElement = ({ id, type, content, changeContent }: Props) => {
         changeContent(id, (e.target as HTMLTextAreaElement).value);
     };
 
+    const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        changeType(id, e.target.value);
+        resize();
+    };
+
     return (
-        <textarea
-            ref={inputRef}
-            value={content}
-            spellCheck={false}
-            className={styles[`input-${type}`]}
-            onChange={handleChange}
-        />
+        <div className={styles.inputContainer}>
+            <select defaultValue={type} onChange={handleSelectChange}>
+                <option value="h1">h1</option>
+                <option value="h2">h2</option>
+                <option value="h3">h3</option>
+                <option value="p">p</option>
+            </select>
+            <textarea
+                ref={inputRef}
+                value={content}
+                spellCheck={false}
+                className={styles[`input-${type}`]}
+                onChange={handleChange}
+            />
+        </div>
     );
 };
 
