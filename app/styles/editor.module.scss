@@ -14,6 +14,12 @@
     overflow: hidden;
 }
 
+@mixin button {
+    border: none;
+    background-color: transparent;
+    font-size: 1.4rem;
+}
+
 .container {
     @include FLEX(column, center, center, 8px);
     max-width: 640px;
@@ -56,4 +62,34 @@
     font-size: 1rem;
     color: $neutral-800;
     line-height: 32px;
+}
+
+.imageElement {
+    @include FLEX(column, center, center, 4px);
+    margin: 24px 0;
+    width: 100%;
+    position: relative;
+
+    & > header {
+        position: absolute;
+        top: -28px;
+        right: 0;
+
+        & > button {
+            @include button;
+        }
+    }
+
+    & > img {
+        width: 100%;
+        aspect-ratio: 16/9;
+        background-color: $primary-200;
+        border: none;
+    }
+
+    & > input {
+        width: 100%;
+        padding: 4px;
+        outline: none;
+    }
 }

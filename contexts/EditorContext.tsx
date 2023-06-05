@@ -7,8 +7,12 @@ import { ReactNode, useState, createContext, useCallback } from "react";
  */
 export interface Entity {
     id: string;
-    type: string;
-    content: string;
+    type?: string;
+    content?: string;
+    fields?: {
+        url: string;
+        alt: string;
+    };
 }
 
 interface PostEntity {
@@ -22,6 +26,7 @@ interface ContextProps {
     postEntity: PostEntity;
     changeContent: (id: string, newContent: string) => void;
     changeType: (id: string, newType: string) => void;
+    changeImageFields: (id: string, newUrl: string, newAlt: string) => void;
 }
 
 export const EditorContext = createContext<ContextProps | undefined>(undefined);
@@ -81,6 +86,14 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                 content:
                     "A arquitetura que utilizamos atualmente é conhecida como Arquitetura de Von Neumann. Ela é constituída por três módulos básicos: O processador, a memória principal e o barramento.",
             },
+            {
+                id: "8",
+                type: "img",
+                fields: {
+                    url: "",
+                    alt: "",
+                },
+            },
         ],
     });
 
@@ -121,9 +134,27 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         });
     }, []);
 
+    const changeImageFields = useCallback(
+        (id: string, newUrl: string, newAlt: string) => {
+            setEditorState((prevState) => {
+                const { newEntities, changeIndex } = findEntity(prevState, id);
+                newEntities[changeIndex].fields!.url = newUrl;
+                newEntities[changeIndex].fields!.alt = newAlt;
+
+                return { ...prevState, entities: newEntities };
+            });
+        },
+        []
+    );
+
     return (
         <EditorContext.Provider
-            value={{ postEntity: editorState, changeContent, changeType }}
+            value={{
+                postEntity: editorState,
+                changeContent,
+                changeType,
+                changeImageFields,
+            }}
         >
             {children}
         </EditorContext.Provider>
