@@ -1,6 +1,12 @@
 "use client";
 
-import { ReactNode, useState, createContext, useCallback } from "react";
+import {
+    ReactNode,
+    useState,
+    createContext,
+    useCallback,
+    useEffect,
+} from "react";
 
 /**
  * Entities are the elements of the editor. They hava a type and a content representing a HTML tag an its text content
@@ -34,68 +40,10 @@ export const EditorContext = createContext<ContextProps | undefined>(undefined);
 
 const EditorProvider = ({ children }: { children: ReactNode }) => {
     const [editorState, setEditorState] = useState<PostEntity>({
-        title: "Elementos de Hardware e arquitetura de Von Neumann",
-        metadescription:
-            "Neste post nós discutimos os principais componentes de um computador atual e como seus módulos são organizados",
-        tags: [
-            "Hardware",
-            "Von Neumann",
-            "Fundamentos da computaçao",
-            "Ciência da computação",
-        ],
-        entities: [
-            {
-                id: "1",
-                type: "h1",
-                content: "Elementos de Hardware e arquitetura de Von Neumann",
-            },
-
-            {
-                id: "2",
-                type: "p",
-                content:
-                    "Os elementos que compõem um computador atual são vários. Desde chips até placas completas com inúmeros circuitos integrados, os PCs atuais possuem uma complexidade imensa. Contudo, uma arquitetura que surgiu por volta de 1945, ainda faz parte do nosso dia a dia computacional.",
-            },
-
-            {
-                id: "3",
-                type: "p",
-                content:
-                    "Foi ela que permitiu a existência do conceito de programa armazenado, permitindo assim que os nosso laptops e celulares existam hoje em dia. Antes dela, os computadores eram feitos para executar uma única tarefa específica.",
-            },
-            {
-                id: "4",
-                type: "h2",
-                content: "Arquitetura dos computadores",
-            },
-            {
-                id: "5",
-                type: "p",
-                content:
-                    "Podemos definir uma arquitetura de computador como a organização dos módulos funcionais do computador, como o processador, memória e etc, bem como todo o conjunto de suas propriedades lógicas e abstratas.",
-            },
-            {
-                id: "6",
-                type: "p",
-                content:
-                    "A arquitetura que utilizamos atualmente é conhecida como Arquitetura de Von Neumann. Ela é constituída por três módulos básicos: O processador, a memória principal e o barramento.",
-            },
-
-            {
-                id: "7",
-                type: "h3",
-                content:
-                    "A arquitetura que utilizamos atualmente é conhecida como Arquitetura de Von Neumann. Ela é constituída por três módulos básicos: O processador, a memória principal e o barramento.",
-            },
-            {
-                id: "8",
-                type: "img",
-                fields: {
-                    url: "",
-                    alt: "",
-                },
-            },
-        ],
+        title: "Some title",
+        metadescription: "Meta my friend",
+        tags: [],
+        entities: [],
     });
 
     const findEntity = useCallback((state: PostEntity, entityId: string) => {
@@ -154,6 +102,10 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         []
     );
 
+    /**
+     * Adds a new element on the editor state
+     * @param type the type of the entity
+     */
     const pushElement = useCallback(
         (type: "img" | "p" | "h1" | "h2" | "h3") => {
             setEditorState((prevState) => {
@@ -181,6 +133,24 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         },
         []
     );
+
+    const handleKeyAction = (e: KeyboardEvent) => {
+        if (document.activeElement?.tagName === "BODY") {
+            if (e.key === "a") pushElement("p");
+            else if (e.key === "i") pushElement("img");
+        }
+
+        //remove focus from input
+        else if (e.key === "Escape") {
+            (document.activeElement as HTMLTextAreaElement).blur();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("keyup", handleKeyAction);
+
+        return () => window.removeEventListener("keyup", handleKeyAction);
+    }, []);
 
     return (
         <EditorContext.Provider
