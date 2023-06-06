@@ -7,7 +7,7 @@ import { ReactNode, useState, createContext, useCallback } from "react";
  */
 export interface Entity {
     id: string;
-    type?: string;
+    type: string;
     content?: string;
     fields?: {
         url: string;
@@ -27,6 +27,7 @@ interface ContextProps {
     changeContent: (id: string, newContent: string) => void;
     changeType: (id: string, newType: string) => void;
     changeImageFields: (id: string, newUrl: string, newAlt: string) => void;
+    pushElement: (type: "img" | "p" | "h1" | "h2" | "h3") => void;
 }
 
 export const EditorContext = createContext<ContextProps | undefined>(undefined);
@@ -134,12 +135,46 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         });
     }, []);
 
+    /**
+     * Changes the image files (url ant alternative text)
+     * @param id the entity image id
+     * @param newUrl the new updated url
+     * @param newAlt the new updated alternative text
+     */
     const changeImageFields = useCallback(
         (id: string, newUrl: string, newAlt: string) => {
             setEditorState((prevState) => {
                 const { newEntities, changeIndex } = findEntity(prevState, id);
                 newEntities[changeIndex].fields!.url = newUrl;
                 newEntities[changeIndex].fields!.alt = newAlt;
+
+                return { ...prevState, entities: newEntities };
+            });
+        },
+        []
+    );
+
+    const pushElement = useCallback(
+        (type: "img" | "p" | "h1" | "h2" | "h3") => {
+            setEditorState((prevState) => {
+                const newEntities = prevState.entities;
+
+                if (type === "img") {
+                    newEntities.push({
+                        id: String(Math.random() % 9999),
+                        type: "img",
+                        fields: {
+                            url: "",
+                            alt: "",
+                        },
+                    });
+                } else {
+                    newEntities.push({
+                        id: String(Math.random() % 9999),
+                        type,
+                        content: "digite algo",
+                    });
+                }
 
                 return { ...prevState, entities: newEntities };
             });
@@ -154,6 +189,7 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                 changeContent,
                 changeType,
                 changeImageFields,
+                pushElement,
             }}
         >
             {children}

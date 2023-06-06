@@ -6,8 +6,13 @@ import EditorElement from "@/components/EditorElement";
 import ImageElement from "@/components/ImageElement";
 
 export default function Editor() {
-    const { postEntity, changeContent, changeType, changeImageFields } =
-        useContext(EditorContext)!;
+    const {
+        postEntity,
+        changeContent,
+        changeType,
+        changeImageFields,
+        pushElement,
+    } = useContext(EditorContext)!;
 
     return (
         <>
@@ -38,6 +43,23 @@ export default function Editor() {
                         />
                     );
                 })}
+
+                <div className={styles.addContainer}>
+                    <button
+                        type="button"
+                        className={styles.addButton}
+                        onClick={() => pushElement("p")}
+                    >
+                        add element
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.addButton}
+                        onClick={() => pushElement("img")}
+                    >
+                        add image
+                    </button>
+                </div>
             </main>
         </>
     );
