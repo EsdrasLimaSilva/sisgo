@@ -20,6 +20,28 @@
     font-size: 1.4rem;
 }
 
+.metaInfoContainer {
+    @include FLEX(column, center, center, 8px);
+    width: 100%;
+
+    & > input,
+    textarea {
+        border: none;
+        padding: 8px 16px;
+        width: 100%;
+        font-size: 1rem;
+        background-color: $white;
+        outline: none;
+        resize: none;
+        box-shadow: 0px 1px 2px $transparent;
+
+        &:placeholder {
+            font-weight: light;
+            font-size: 1rem;
+        }
+    }
+}
+
 .addContainer {
     @include FLEX(row, center, center, 8px);
 }

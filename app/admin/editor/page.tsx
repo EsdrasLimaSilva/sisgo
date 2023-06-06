@@ -1,5 +1,5 @@
 "use client";
-import { useContext } from "react";
+import { ChangeEvent, useContext, useRef } from "react";
 import styles from "@/app/styles/editor.module.scss";
 import { EditorContext } from "@/contexts/EditorContext";
 import EditorElement from "@/components/EditorElement";
@@ -12,7 +12,24 @@ export default function Editor() {
         changeType,
         changeImageFields,
         pushElement,
+        changeMetaInfo,
     } = useContext(EditorContext)!;
+
+    const titleRef = useRef(null);
+    const descRef = useRef(null);
+    const tagsRef = useRef(null);
+
+    const handleChange = (e: ChangeEvent) => {
+        const titleInput = titleRef.current as HTMLInputElement | null;
+        const descInput = descRef.current as HTMLTextAreaElement | null;
+        const tagsInput = tagsRef.current as HTMLInputElement | null;
+
+        console.log(postEntity.tags);
+
+        if (titleInput && descInput && tagsInput) {
+            changeMetaInfo(titleInput.value, descInput.value, tagsInput.value);
+        }
+    };
 
     return (
         <>
@@ -20,6 +37,34 @@ export default function Editor() {
                 <h1 className="logo-admin">Sisgo</h1>
             </header>
             <main className={styles.container}>
+                <h2>Post</h2>
+                <div className={styles.metaInfoContainer}>
+                    <input
+                        ref={titleRef}
+                        type="text"
+                        placeholder="título"
+                        required
+                        value={postEntity.title}
+                        onChange={handleChange}
+                    />
+                    <textarea
+                        ref={descRef}
+                        placeholder="meta descrição"
+                        rows={8}
+                        required
+                        value={postEntity.metadescription}
+                        onChange={handleChange}
+                    />
+                    <input
+                        ref={tagsRef}
+                        type="text"
+                        placeholder="tags separadas por vírgula"
+                        required
+                        value={postEntity.tags}
+                        onChange={handleChange}
+                    />
+                </div>
+
                 {postEntity.entities.map((entity) => {
                     if (entity.type == "img")
                         return (

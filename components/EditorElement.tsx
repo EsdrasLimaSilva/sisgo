@@ -56,6 +56,7 @@ const EditorElement = ({
                 spellCheck={false}
                 className={styles[`input-${type}`]}
                 onChange={handleChange}
+                placeholder="digite algo"
             />
         </div>
     );

@@ -1,5 +1,6 @@
 "use client";
 
+import { title } from "process";
 import {
     ReactNode,
     useState,
@@ -34,6 +35,11 @@ interface ContextProps {
     changeType: (id: string, newType: string) => void;
     changeImageFields: (id: string, newUrl: string, newAlt: string) => void;
     pushElement: (type: "img" | "p" | "h1" | "h2" | "h3") => void;
+    changeMetaInfo: (
+        title: string,
+        metadescription: string,
+        tags: string
+    ) => void;
 }
 
 export const EditorContext = createContext<ContextProps | undefined>(undefined);
@@ -42,7 +48,7 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
     const [editorState, setEditorState] = useState<PostEntity>({
         title: "Some title",
         metadescription: "Meta my friend",
-        tags: [],
+        tags: ["tag1", "tag2", "tag3"],
         entities: [],
     });
 
@@ -97,6 +103,17 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                 newEntities[changeIndex].fields!.alt = newAlt;
 
                 return { ...prevState, entities: newEntities };
+            });
+        },
+        []
+    );
+
+    const changeMetaInfo = useCallback(
+        (title: string, metadescription: string, tags: string) => {
+            const tagsArr = tags.split(",").map((tag) => tag.trim());
+
+            setEditorState((prev) => {
+                return { ...prev, title, metadescription, tags: tagsArr };
             });
         },
         []
@@ -160,6 +177,7 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                 changeType,
                 changeImageFields,
                 pushElement,
+                changeMetaInfo,
             }}
         >
             {children}
