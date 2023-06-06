@@ -1,5 +1,6 @@
 "use client";
 
+import { FaTrash } from "react-icons/fa";
 import styles from "@/app/styles/editor.module.scss";
 import { ChangeEvent, use, useRef } from "react";
 
@@ -29,7 +30,9 @@ export default function ImageElement({
     return (
         <div className={styles.imageElement}>
             <header>
-                <button type="button">x</button>
+                <button type="button">
+                    <FaTrash />
+                </button>
             </header>
 
             <img src={url} alt={alt} />
