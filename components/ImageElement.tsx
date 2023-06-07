@@ -37,6 +37,7 @@ export default function ImageElement({
 
             <img src={url} alt={alt} />
             <input
+                id={id}
                 ref={urlRef}
                 type="text"
                 placeholder="url"

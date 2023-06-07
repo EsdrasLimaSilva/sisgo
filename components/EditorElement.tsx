@@ -51,6 +51,7 @@ const EditorElement = ({
                 <option value="p">p</option>
             </select>
             <textarea
+                id={id}
                 ref={inputRef}
                 value={content}
                 spellCheck={false}

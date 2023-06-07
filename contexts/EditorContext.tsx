@@ -51,6 +51,7 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         tags: ["tag1", "tag2", "tag3"],
         entities: [],
     });
+    const [focusState, setFocusState] = useState("");
 
     const findEntity = useCallback((state: PostEntity, entityId: string) => {
         const newEntities = state.entities;
@@ -128,9 +129,11 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
             setEditorState((prevState) => {
                 const newEntities = prevState.entities;
 
+                const entityId = String(Math.round(Math.random() * 9999));
+
                 if (type === "img") {
                     newEntities.push({
-                        id: String(Math.random() % 9999),
+                        id: entityId,
                         type: "img",
                         fields: {
                             url: "",
@@ -139,11 +142,13 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                     });
                 } else {
                     newEntities.push({
-                        id: String(Math.random() % 9999),
+                        id: entityId,
                         type,
-                        content: "digite algo",
+                        content: "",
                     });
                 }
+
+                setFocusState(entityId);
 
                 return { ...prevState, entities: newEntities };
             });
@@ -168,6 +173,13 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
 
         return () => window.removeEventListener("keyup", handleKeyAction);
     }, []);
+
+    /** Handle the focus on a specific element */
+    useEffect(() => {
+        const input = document.getElementById(focusState);
+        input?.focus();
+        input?.scrollIntoView();
+    }, [focusState]);
 
     return (
         <EditorContext.Provider
