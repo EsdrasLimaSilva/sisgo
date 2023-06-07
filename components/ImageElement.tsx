@@ -9,6 +9,7 @@ interface Props {
     url: string;
     alt: string;
     changeImageFields: (id: string, newUrl: string, newAlt: string) => void;
+    popElement: (id: string) => void;
 }
 
 export default function ImageElement({
@@ -16,6 +17,7 @@ export default function ImageElement({
     url,
     alt,
     changeImageFields,
+    popElement,
 }: Props) {
     const urlRef = useRef(null);
     const altRef = useRef(null);
@@ -30,13 +32,14 @@ export default function ImageElement({
     return (
         <div className={styles.imageElement}>
             <header>
-                <button type="button">
+                <button type="button" onClick={() => popElement(id)}>
                     <FaTrash />
                 </button>
             </header>
 
             <img src={url} alt={alt} />
             <input
+                id={id}
                 ref={urlRef}
                 type="text"
                 placeholder="url"

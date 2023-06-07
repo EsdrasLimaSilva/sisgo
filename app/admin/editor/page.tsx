@@ -1,9 +1,10 @@
 "use client";
-import { useContext } from "react";
+import { ChangeEvent, useContext, useRef, useState } from "react";
 import styles from "@/app/styles/editor.module.scss";
 import { EditorContext } from "@/contexts/EditorContext";
 import EditorElement from "@/components/EditorElement";
 import ImageElement from "@/components/ImageElement";
+import { FaSpinner } from "react-icons/fa";
 
 export default function Editor() {
     const {
@@ -12,7 +13,66 @@ export default function Editor() {
         changeType,
         changeImageFields,
         pushElement,
+        changeMetaInfo,
+        popElement,
     } = useContext(EditorContext)!;
+
+    const [postState, setpostState] = useState({
+        publishing: false,
+        successful: false,
+        message: "",
+    });
+
+    const titleRef = useRef(null);
+    const descRef = useRef(null);
+    const tagsRef = useRef(null);
+    const overlayRef = useRef(null);
+
+    //handle the change on the meta inputs
+    const handleChange = (e: ChangeEvent) => {
+        const titleInput = titleRef.current as HTMLInputElement | null;
+        const descInput = descRef.current as HTMLTextAreaElement | null;
+        const tagsInput = tagsRef.current as HTMLInputElement | null;
+
+        console.log(postEntity.tags);
+
+        if (titleInput && descInput && tagsInput) {
+            changeMetaInfo(titleInput.value, descInput.value, tagsInput.value);
+        }
+    };
+
+    //tries to publish the post
+    const publishPost = async () => {
+        try {
+            // (overlayRef.current! as HTMLDivElement).style.display = "";
+            setpostState((prev) => ({ ...prev, publishing: true }));
+            const response = await fetch("/api/posts", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(postEntity),
+            });
+
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve("Finish");
+                }, 2000);
+            });
+        } catch (err) {
+        } finally {
+            setTimeout(() => {
+                if (postState.successful) alert("Post publicado");
+                else alert("Algo deu errado!");
+
+                setpostState((prev) => ({
+                    ...prev,
+                    publishing: false,
+                    successful: false,
+                }));
+            }, 1500);
+        }
+    };
 
     return (
         <>
@@ -20,6 +80,51 @@ export default function Editor() {
                 <h1 className="logo-admin">Sisgo</h1>
             </header>
             <main className={styles.container}>
+                {postState.publishing && (
+                    <div className={styles.overlay} ref={overlayRef}>
+                        <div>
+                            <h2>Publicando</h2>
+                            <FaSpinner />
+                        </div>
+                    </div>
+                )}
+
+                <button
+                    type="button"
+                    className={styles.publishButton}
+                    onClick={publishPost}
+                >
+                    publicar
+                </button>
+
+                <h2>Post</h2>
+                <div className={styles.metaInfoContainer}>
+                    <input
+                        ref={titleRef}
+                        type="text"
+                        placeholder="título"
+                        required
+                        value={postEntity.title}
+                        onChange={handleChange}
+                    />
+                    <textarea
+                        ref={descRef}
+                        placeholder="meta descrição"
+                        rows={8}
+                        required
+                        value={postEntity.metadescription}
+                        onChange={handleChange}
+                    />
+                    <input
+                        ref={tagsRef}
+                        type="text"
+                        placeholder="tags separadas por vírgula"
+                        required
+                        value={postEntity.tags}
+                        onChange={handleChange}
+                    />
+                </div>
+
                 {postEntity.entities.map((entity) => {
                     if (entity.type == "img")
                         return (
@@ -29,6 +134,7 @@ export default function Editor() {
                                 url={entity.fields!.url}
                                 alt={entity.fields!.alt}
                                 changeImageFields={changeImageFields}
+                                popElement={popElement}
                             />
                         );
 
@@ -40,6 +146,7 @@ export default function Editor() {
                             content={entity.content}
                             changeContent={changeContent}
                             changeType={changeType}
+                            popElement={popElement}
                         />
                     );
                 })}
@@ -50,14 +157,14 @@ export default function Editor() {
                         className={styles.addButton}
                         onClick={() => pushElement("p")}
                     >
-                        add element
+                        adicionar elemento
                     </button>
                     <button
                         type="button"
                         className={styles.addButton}
                         onClick={() => pushElement("img")}
                     >
-                        add image
+                        adicionar imagem
                     </button>
                 </div>
             </main>

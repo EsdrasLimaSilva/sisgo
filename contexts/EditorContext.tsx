@@ -1,5 +1,6 @@
 "use client";
 
+import { title } from "process";
 import {
     ReactNode,
     useState,
@@ -21,7 +22,8 @@ export interface Entity {
     };
 }
 
-interface PostEntity {
+export interface PostEntity {
+    _id: string;
     title: string;
     metadescription: string;
     tags: string[];
@@ -34,17 +36,25 @@ interface ContextProps {
     changeType: (id: string, newType: string) => void;
     changeImageFields: (id: string, newUrl: string, newAlt: string) => void;
     pushElement: (type: "img" | "p" | "h1" | "h2" | "h3") => void;
+    changeMetaInfo: (
+        title: string,
+        metadescription: string,
+        tags: string
+    ) => void;
+    popElement: (id: string) => void;
 }
 
 export const EditorContext = createContext<ContextProps | undefined>(undefined);
 
 const EditorProvider = ({ children }: { children: ReactNode }) => {
     const [editorState, setEditorState] = useState<PostEntity>({
-        title: "Some title",
-        metadescription: "Meta my friend",
+        _id: "647c8ee182df1b192fc6f1e4",
+        title: "",
+        metadescription: "",
         tags: [],
         entities: [],
     });
+    const [focusState, setFocusState] = useState("");
 
     const findEntity = useCallback((state: PostEntity, entityId: string) => {
         const newEntities = state.entities;
@@ -102,6 +112,17 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         []
     );
 
+    const changeMetaInfo = useCallback(
+        (title: string, metadescription: string, tags: string) => {
+            const tagsArr = tags.split(",").map((tag) => tag.trim());
+
+            setEditorState((prev) => {
+                return { ...prev, title, metadescription, tags: tagsArr };
+            });
+        },
+        []
+    );
+
     /**
      * Adds a new element on the editor state
      * @param type the type of the entity
@@ -111,9 +132,11 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
             setEditorState((prevState) => {
                 const newEntities = prevState.entities;
 
+                const entityId = String(Math.round(Math.random() * 999999));
+
                 if (type === "img") {
                     newEntities.push({
-                        id: String(Math.random() % 9999),
+                        id: entityId,
                         type: "img",
                         fields: {
                             url: "",
@@ -122,11 +145,13 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                     });
                 } else {
                     newEntities.push({
-                        id: String(Math.random() % 9999),
+                        id: entityId,
                         type,
-                        content: "digite algo",
+                        content: "",
                     });
                 }
+
+                setFocusState(entityId);
 
                 return { ...prevState, entities: newEntities };
             });
@@ -134,9 +159,21 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         []
     );
 
+    const popElement = useCallback((id: string) => {
+        setEditorState((prevState) => {
+            const newEntities = prevState.entities.filter(
+                (entity) => entity.id != id
+            );
+
+            return { ...prevState, entities: newEntities };
+        });
+    }, []);
+
     const handleKeyAction = (e: KeyboardEvent) => {
         if (document.activeElement?.tagName === "BODY") {
+            //adds the text element (default)
             if (e.key === "a") pushElement("p");
+            // adds the image element
             else if (e.key === "i") pushElement("img");
         }
 
@@ -152,6 +189,13 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         return () => window.removeEventListener("keyup", handleKeyAction);
     }, []);
 
+    /** Handle the focus on a specific element */
+    useEffect(() => {
+        const input = document.getElementById(focusState);
+        input?.focus();
+        input?.scrollIntoView();
+    }, [focusState]);
+
     return (
         <EditorContext.Provider
             value={{
@@ -160,6 +204,8 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                 changeType,
                 changeImageFields,
                 pushElement,
+                changeMetaInfo,
+                popElement,
             }}
         >
             {children}
