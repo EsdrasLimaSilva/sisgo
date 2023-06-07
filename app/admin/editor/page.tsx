@@ -20,6 +20,7 @@ export default function Editor() {
     const [postState, setpostState] = useState({
         publishing: false,
         successful: false,
+        message: "",
     });
 
     const titleRef = useRef(null);
@@ -27,6 +28,7 @@ export default function Editor() {
     const tagsRef = useRef(null);
     const overlayRef = useRef(null);
 
+    //handle the change on the meta inputs
     const handleChange = (e: ChangeEvent) => {
         const titleInput = titleRef.current as HTMLInputElement | null;
         const descInput = descRef.current as HTMLTextAreaElement | null;
@@ -39,10 +41,18 @@ export default function Editor() {
         }
     };
 
+    //tries to publish the post
     const publishPost = async () => {
         try {
             // (overlayRef.current! as HTMLDivElement).style.display = "";
             setpostState((prev) => ({ ...prev, publishing: true }));
+            const response = await fetch("/api/posts", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(postEntity),
+            });
 
             await new Promise((resolve) => {
                 setTimeout(() => {
@@ -50,7 +60,6 @@ export default function Editor() {
                 }, 2000);
             });
         } catch (err) {
-            console.log(err);
         } finally {
             setTimeout(() => {
                 if (postState.successful) alert("Post publicado");

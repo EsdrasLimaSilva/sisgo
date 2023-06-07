@@ -22,7 +22,8 @@ export interface Entity {
     };
 }
 
-interface PostEntity {
+export interface PostEntity {
+    _id: string;
     title: string;
     metadescription: string;
     tags: string[];
@@ -47,6 +48,7 @@ export const EditorContext = createContext<ContextProps | undefined>(undefined);
 
 const EditorProvider = ({ children }: { children: ReactNode }) => {
     const [editorState, setEditorState] = useState<PostEntity>({
+        _id: "647c8ee182df1b192fc6f1e4",
         title: "",
         metadescription: "",
         tags: [],
@@ -130,7 +132,7 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
             setEditorState((prevState) => {
                 const newEntities = prevState.entities;
 
-                const entityId = String(Math.round(Math.random() * 9999));
+                const entityId = String(Math.round(Math.random() * 999999));
 
                 if (type === "img") {
                     newEntities.push({
