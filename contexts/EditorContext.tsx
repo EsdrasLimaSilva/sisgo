@@ -40,6 +40,7 @@ interface ContextProps {
         metadescription: string,
         tags: string
     ) => void;
+    popElement: (id: string) => void;
 }
 
 export const EditorContext = createContext<ContextProps | undefined>(undefined);
@@ -156,9 +157,21 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         []
     );
 
+    const popElement = useCallback((id: string) => {
+        setEditorState((prevState) => {
+            const newEntities = prevState.entities.filter(
+                (entity) => entity.id != id
+            );
+
+            return { ...prevState, entities: newEntities };
+        });
+    }, []);
+
     const handleKeyAction = (e: KeyboardEvent) => {
         if (document.activeElement?.tagName === "BODY") {
+            //adds the text element (default)
             if (e.key === "a") pushElement("p");
+            // adds the image element
             else if (e.key === "i") pushElement("img");
         }
 
@@ -190,6 +203,7 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                 changeImageFields,
                 pushElement,
                 changeMetaInfo,
+                popElement,
             }}
         >
             {children}

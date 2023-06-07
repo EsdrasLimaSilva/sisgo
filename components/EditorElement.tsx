@@ -3,10 +3,12 @@
 import { Entity } from "@/contexts/EditorContext";
 import styles from "@/app/styles/editor.module.scss";
 import { ChangeEvent, memo, useCallback, useEffect, useRef } from "react";
+import { FaTrash } from "react-icons/fa";
 
 interface Props extends Entity {
     changeContent: (id: string, newContent: string) => void;
     changeType: (id: string, newType: string) => void;
+    popElement: (id: string) => void;
 }
 
 const EditorElement = ({
@@ -15,6 +17,7 @@ const EditorElement = ({
     content,
     changeContent,
     changeType,
+    popElement,
 }: Props) => {
     const inputRef = useRef(null);
 
@@ -44,12 +47,17 @@ const EditorElement = ({
 
     return (
         <div className={styles.inputContainer}>
-            <select defaultValue={type} onChange={handleSelectChange}>
-                <option value="h1">h1</option>
-                <option value="h2">h2</option>
-                <option value="h3">h3</option>
-                <option value="p">p</option>
-            </select>
+            <div>
+                <select defaultValue={type} onChange={handleSelectChange}>
+                    <option value="h1">h1</option>
+                    <option value="h2">h2</option>
+                    <option value="h3">h3</option>
+                    <option value="p">p</option>
+                </select>
+                <button type="button" onClick={() => popElement(id)}>
+                    <FaTrash />
+                </button>
+            </div>
             <textarea
                 id={id}
                 ref={inputRef}

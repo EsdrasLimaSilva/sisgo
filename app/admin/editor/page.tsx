@@ -13,6 +13,7 @@ export default function Editor() {
         changeImageFields,
         pushElement,
         changeMetaInfo,
+        popElement,
     } = useContext(EditorContext)!;
 
     const titleRef = useRef(null);
@@ -74,6 +75,7 @@ export default function Editor() {
                                 url={entity.fields!.url}
                                 alt={entity.fields!.alt}
                                 changeImageFields={changeImageFields}
+                                popElement={popElement}
                             />
                         );
 
@@ -85,6 +87,7 @@ export default function Editor() {
                             content={entity.content}
                             changeContent={changeContent}
                             changeType={changeType}
+                            popElement={popElement}
                         />
                     );
                 })}
