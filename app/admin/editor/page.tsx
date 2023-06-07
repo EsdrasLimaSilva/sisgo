@@ -1,9 +1,10 @@
 "use client";
-import { ChangeEvent, useContext, useRef } from "react";
+import { ChangeEvent, useContext, useRef, useState } from "react";
 import styles from "@/app/styles/editor.module.scss";
 import { EditorContext } from "@/contexts/EditorContext";
 import EditorElement from "@/components/EditorElement";
 import ImageElement from "@/components/ImageElement";
+import { FaSpinner } from "react-icons/fa";
 
 export default function Editor() {
     const {
@@ -16,9 +17,15 @@ export default function Editor() {
         popElement,
     } = useContext(EditorContext)!;
 
+    const [postState, setpostState] = useState({
+        publishing: false,
+        successful: false,
+    });
+
     const titleRef = useRef(null);
     const descRef = useRef(null);
     const tagsRef = useRef(null);
+    const overlayRef = useRef(null);
 
     const handleChange = (e: ChangeEvent) => {
         const titleInput = titleRef.current as HTMLInputElement | null;
@@ -32,12 +39,55 @@ export default function Editor() {
         }
     };
 
+    const publishPost = async () => {
+        try {
+            // (overlayRef.current! as HTMLDivElement).style.display = "";
+            setpostState((prev) => ({ ...prev, publishing: true }));
+
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve("Finish");
+                }, 2000);
+            });
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setTimeout(() => {
+                if (postState.successful) alert("Post publicado");
+                else alert("Algo deu errado!");
+
+                setpostState((prev) => ({
+                    ...prev,
+                    publishing: false,
+                    successful: false,
+                }));
+            }, 1500);
+        }
+    };
+
     return (
         <>
             <header>
                 <h1 className="logo-admin">Sisgo</h1>
             </header>
             <main className={styles.container}>
+                {postState.publishing && (
+                    <div className={styles.overlay} ref={overlayRef}>
+                        <div>
+                            <h2>Publicando</h2>
+                            <FaSpinner />
+                        </div>
+                    </div>
+                )}
+
+                <button
+                    type="button"
+                    className={styles.publishButton}
+                    onClick={publishPost}
+                >
+                    publicar
+                </button>
+
                 <h2>Post</h2>
                 <div className={styles.metaInfoContainer}>
                     <input
@@ -98,14 +148,14 @@ export default function Editor() {
                         className={styles.addButton}
                         onClick={() => pushElement("p")}
                     >
-                        add element
+                        adicionar elemento
                     </button>
                     <button
                         type="button"
                         className={styles.addButton}
                         onClick={() => pushElement("img")}
                     >
-                        add image
+                        adicionar imagem
                     </button>
                 </div>
             </main>

@@ -47,9 +47,9 @@ export const EditorContext = createContext<ContextProps | undefined>(undefined);
 
 const EditorProvider = ({ children }: { children: ReactNode }) => {
     const [editorState, setEditorState] = useState<PostEntity>({
-        title: "Some title",
-        metadescription: "Meta my friend",
-        tags: ["tag1", "tag2", "tag3"],
+        title: "",
+        metadescription: "",
+        tags: [],
         entities: [],
     });
     const [focusState, setFocusState] = useState("");
