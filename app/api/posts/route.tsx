@@ -29,6 +29,9 @@ export async function PUT(req: NextRequest) {
             {
                 $set: {
                     title: post.title,
+                    metadescription: post.metadescription,
+                    tags: post.tags,
+                    entities: post.entities,
                 },
             }
         );

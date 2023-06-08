@@ -114,7 +114,7 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
 
     const changeMetaInfo = useCallback(
         (title: string, metadescription: string, tags: string) => {
-            const tagsArr = tags.split(",").map((tag) => tag.trim());
+            const tagsArr = tags.split(",");
 
             setEditorState((prev) => {
                 return { ...prev, title, metadescription, tags: tagsArr };
