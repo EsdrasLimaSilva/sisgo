@@ -1,5 +1,14 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import clientPromise from "./mongodb";
+import { Collection, ObjectId } from "mongodb";
+
+interface User {
+    _id: string;
+    name: string;
+    email: string;
+    password: string;
+}
 
 export const authOptions: NextAuthOptions = {
     session: {
@@ -21,12 +30,27 @@ export const authOptions: NextAuthOptions = {
                 },
             },
             async authorize(credentials) {
-                const user = {
-                    id: "1",
-                    name: "Admin",
-                    email: "admin@admin.com",
+                if (!credentials?.email || !credentials?.password) return null;
+
+                const mongo = await clientPromise;
+                const db = mongo.db("sisgo");
+                const usersCollection: Collection<User> =
+                    db.collection<User>("users");
+
+                const users = await usersCollection
+                    .find({
+                        email: credentials.email,
+                        password: credentials.password,
+                    })
+                    .toArray();
+
+                if (!users.length) return null;
+
+                return {
+                    id: users[0]._id,
+                    email: users[0].email,
+                    name: users[0].name,
                 };
-                return user;
             },
         }),
     ],

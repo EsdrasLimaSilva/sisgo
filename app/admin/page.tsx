@@ -1,13 +1,9 @@
-"use client";
+import SignInButton from "@/components/SignInButton";
 
-import { signIn } from "next-auth/react";
-
-export default function Admin() {
+export default async function Admin() {
     return (
         <main>
-            <button type="button" onClick={() => signIn()}>
-                signin
-            </button>
+            <SignInButton />
         </main>
     );
 }
