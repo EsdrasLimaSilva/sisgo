@@ -46,9 +46,10 @@ interface ContextProps {
 
 export const EditorContext = createContext<ContextProps | undefined>(undefined);
 
+//647c8ee182df1b192fc6f1e4
 const EditorProvider = ({ children }: { children: ReactNode }) => {
     const [editorState, setEditorState] = useState<PostEntity>({
-        _id: "647c8ee182df1b192fc6f1e4",
+        _id: "",
         title: "",
         metadescription: "",
         tags: [],
