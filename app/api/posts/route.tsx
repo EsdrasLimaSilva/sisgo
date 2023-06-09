@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import clientPromise from "../../lib/mongodb";
+import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { PostEntity } from "@/contexts/EditorContext";
 
@@ -17,6 +17,19 @@ export async function GET() {
     }
 }
 
+export async function POST() {
+    try {
+        const mongo = await clientPromise;
+        const db = mongo.db("sisgo");
+
+        const response = await db.collection("posts").insertOne({});
+
+        return NextResponse.json(response);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export async function PUT(req: NextRequest) {
     try {
         const post = (await req.json()) as PostEntity;
@@ -29,6 +42,9 @@ export async function PUT(req: NextRequest) {
             {
                 $set: {
                     title: post.title,
+                    metadescription: post.metadescription,
+                    tags: post.tags,
+                    entities: post.entities,
                 },
             }
         );

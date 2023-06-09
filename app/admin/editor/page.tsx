@@ -1,10 +1,11 @@
 "use client";
-import { ChangeEvent, useContext, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import styles from "@/app/styles/editor.module.scss";
 import { EditorContext } from "@/contexts/EditorContext";
 import EditorElement from "@/components/EditorElement";
 import ImageElement from "@/components/ImageElement";
 import { FaSpinner } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function Editor() {
     const {
@@ -19,8 +20,6 @@ export default function Editor() {
 
     const [postState, setpostState] = useState({
         publishing: false,
-        successful: false,
-        message: "",
     });
 
     const titleRef = useRef(null);
@@ -28,13 +27,13 @@ export default function Editor() {
     const tagsRef = useRef(null);
     const overlayRef = useRef(null);
 
+    const router = useRouter();
+
     //handle the change on the meta inputs
     const handleChange = (e: ChangeEvent) => {
         const titleInput = titleRef.current as HTMLInputElement | null;
         const descInput = descRef.current as HTMLTextAreaElement | null;
         const tagsInput = tagsRef.current as HTMLInputElement | null;
-
-        console.log(postEntity.tags);
 
         if (titleInput && descInput && tagsInput) {
             changeMetaInfo(titleInput.value, descInput.value, tagsInput.value);
@@ -46,7 +45,7 @@ export default function Editor() {
         try {
             // (overlayRef.current! as HTMLDivElement).style.display = "";
             setpostState((prev) => ({ ...prev, publishing: true }));
-            const response = await fetch("/api/posts", {
+            await fetch("/api/posts", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -54,120 +53,122 @@ export default function Editor() {
                 body: JSON.stringify(postEntity),
             });
 
-            await new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve("Finish");
-                }, 2000);
-            });
+            alert("Tudo certo!");
         } catch (err) {
+            alert("Algo deu errado!");
         } finally {
-            setTimeout(() => {
-                if (postState.successful) alert("Post publicado");
-                else alert("Algo deu errado!");
-
-                setpostState((prev) => ({
-                    ...prev,
-                    publishing: false,
-                    successful: false,
-                }));
-            }, 1500);
+            setpostState((prev) => ({
+                ...prev,
+                publishing: false,
+            }));
         }
     };
 
-    return (
-        <>
-            <header>
-                <h1 className="logo-admin">Sisgo</h1>
-            </header>
-            <main className={styles.container}>
-                {postState.publishing && (
-                    <div className={styles.overlay} ref={overlayRef}>
-                        <div>
-                            <h2>Publicando</h2>
-                            <FaSpinner />
+    //push to dashboard if there is no post _id
+    useEffect(() => {
+        if (!postEntity._id) router.replace("/admin/dashboard");
+    }, []);
+
+    if (postEntity._id)
+        return (
+            <>
+                <header>
+                    <h1 className="logo-admin">Sisgo</h1>
+                </header>
+                <main className={styles.container}>
+                    {postState.publishing && (
+                        <div className={styles.overlay} ref={overlayRef}>
+                            <div>
+                                <h2>Publicando</h2>
+                                <FaSpinner />
+                            </div>
                         </div>
+                    )}
+
+                    <button
+                        type="button"
+                        className={styles.publishButton}
+                        onClick={publishPost}
+                    >
+                        publicar
+                    </button>
+
+                    <h2>Post</h2>
+                    <div className={styles.metaInfoContainer}>
+                        <input
+                            ref={titleRef}
+                            type="text"
+                            placeholder="título"
+                            required
+                            value={postEntity.title}
+                            onChange={handleChange}
+                            spellCheck={false}
+                        />
+                        <textarea
+                            ref={descRef}
+                            placeholder="meta descrição"
+                            rows={8}
+                            required
+                            value={postEntity.metadescription}
+                            onChange={handleChange}
+                            spellCheck={false}
+                        />
+                        <input
+                            ref={tagsRef}
+                            type="text"
+                            placeholder="tags separadas por vírgula"
+                            required
+                            value={postEntity.tags}
+                            onChange={handleChange}
+                            spellCheck={false}
+                        />
                     </div>
-                )}
 
-                <button
-                    type="button"
-                    className={styles.publishButton}
-                    onClick={publishPost}
-                >
-                    publicar
-                </button>
+                    {postEntity.entities.map((entity) => {
+                        if (entity.type == "img")
+                            return (
+                                <ImageElement
+                                    key={entity.id}
+                                    id={entity.id}
+                                    url={entity.fields!.url}
+                                    alt={entity.fields!.alt}
+                                    changeImageFields={changeImageFields}
+                                    popElement={popElement}
+                                />
+                            );
 
-                <h2>Post</h2>
-                <div className={styles.metaInfoContainer}>
-                    <input
-                        ref={titleRef}
-                        type="text"
-                        placeholder="título"
-                        required
-                        value={postEntity.title}
-                        onChange={handleChange}
-                    />
-                    <textarea
-                        ref={descRef}
-                        placeholder="meta descrição"
-                        rows={8}
-                        required
-                        value={postEntity.metadescription}
-                        onChange={handleChange}
-                    />
-                    <input
-                        ref={tagsRef}
-                        type="text"
-                        placeholder="tags separadas por vírgula"
-                        required
-                        value={postEntity.tags}
-                        onChange={handleChange}
-                    />
-                </div>
-
-                {postEntity.entities.map((entity) => {
-                    if (entity.type == "img")
                         return (
-                            <ImageElement
+                            <EditorElement
                                 key={entity.id}
                                 id={entity.id}
-                                url={entity.fields!.url}
-                                alt={entity.fields!.alt}
-                                changeImageFields={changeImageFields}
+                                type={entity.type}
+                                content={entity.content}
+                                changeContent={changeContent}
+                                changeType={changeType}
                                 popElement={popElement}
                             />
                         );
+                    })}
 
-                    return (
-                        <EditorElement
-                            key={entity.id}
-                            id={entity.id}
-                            type={entity.type}
-                            content={entity.content}
-                            changeContent={changeContent}
-                            changeType={changeType}
-                            popElement={popElement}
-                        />
-                    );
-                })}
+                    <div className={styles.addContainer}>
+                        <button
+                            type="button"
+                            className={styles.addButton}
+                            onClick={() => pushElement("p")}
+                        >
+                            adicionar elemento
+                        </button>
+                        <button
+                            type="button"
+                            className={styles.addButton}
+                            onClick={() => pushElement("img")}
+                        >
+                            adicionar imagem
+                        </button>
+                    </div>
+                </main>
+            </>
+        );
 
-                <div className={styles.addContainer}>
-                    <button
-                        type="button"
-                        className={styles.addButton}
-                        onClick={() => pushElement("p")}
-                    >
-                        adicionar elemento
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.addButton}
-                        onClick={() => pushElement("img")}
-                    >
-                        adicionar imagem
-                    </button>
-                </div>
-            </main>
-        </>
-    );
+    return <h1></h1>;
 }

@@ -1,0 +1,83 @@
+@import "./variables.module.scss";
+
+.container {
+    @include FLEX(column, center, center);
+    width: 100vw;
+    height: 100vh;
+
+    & > h1 {
+        font-weight: 600;
+        color: $action-500;
+        position: relative;
+
+        & > sub {
+            font-size: 0.4em;
+            position: absolute;
+            bottom: 0;
+            right: -45%;
+        }
+    }
+}
+
+.dashboard {
+    @include FLEX(column, flex-start, center, 24px);
+    background-color: $white;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0px 1px 2px $transparent;
+    min-height: 100px;
+    padding: 24px 8px;
+    border-radius: 8px;
+
+    & > form {
+        width: 100%;
+    }
+}
+
+.input {
+    padding: 8px 16px;
+    border: 2px solid $neutral-400;
+    width: 100%;
+    border-radius: 100px;
+    outline: none;
+
+    &::placeholder {
+        font-weight: normal;
+    }
+
+    &:focus {
+        border-color: $primary-500;
+    }
+}
+
+.postList {
+    @include FLEX(column, center, center, 4px);
+    list-style-type: none;
+    width: 100%;
+}
+
+.dashPost {
+    @include FLEX(row, space-between, center);
+    background-color: $primary-100;
+    width: 100%;
+    padding: 8px 20px;
+
+    h2,
+    button {
+        font-size: 1rem;
+        font-weight: 500;
+        color: $primary-700;
+    }
+}
+
+.criarPostBtn {
+    background-color: $action-500;
+    font-weight: 600;
+    color: $white;
+    padding: 4px 16px;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+        background-color: $action-600;
+    }
+}
