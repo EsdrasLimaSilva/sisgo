@@ -81,3 +81,7 @@
         background-color: $action-600;
     }
 }
+
+.actionsContainer {
+    @include FLEX(row, center, center, 8px);
+}

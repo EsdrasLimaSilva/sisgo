@@ -20,7 +20,7 @@ export default function DashboardPage() {
         getPosts();
     }, []);
 
-    if (posts) {
+    if (posts.length > 0) {
         return (
             <main className={styles.container}>
                 <h1>

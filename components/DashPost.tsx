@@ -4,6 +4,7 @@ import styles from "@/app/styles/dashboard.module.scss";
 import { PostEntity } from "@/contexts/EditorContext";
 import { useRouter } from "next/navigation";
 import { BsPencilFill } from "react-icons/bs";
+import { FaTrash } from "react-icons/fa";
 
 interface Props {
     post: PostEntity;
@@ -18,12 +19,29 @@ export default function DashPost({ post, editPost }: Props) {
         router.push("/admin/editor");
     };
 
+    const handleDeletePost = async () => {
+        try {
+            await fetch(`/api/posts?id=${post._id}`, {
+                method: "DELETE",
+            });
+            router.replace("/admin/dashboard");
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return (
         <li className={styles.dashPost}>
             <h2>{post.title}</h2>
-            <button type="button" onClick={handleEditPost}>
-                <BsPencilFill />
-            </button>
+            <span className={styles.actionsContainer}>
+                <button type="button" onClick={handleEditPost}>
+                    <BsPencilFill />
+                </button>
+
+                <button type="button" onClick={handleDeletePost}>
+                    <FaTrash />
+                </button>
+            </span>
         </li>
     );
 }
