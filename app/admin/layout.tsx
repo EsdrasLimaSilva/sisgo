@@ -11,7 +11,7 @@ export const metadata = {
 export default async function Layout({ children }: { children: ReactNode }) {
     const session = await getServerSession(authOptions);
 
-    if (!session) redirect("/admin");
+    if (!session) redirect("/login");
 
     return <EditorProvider>{children}</EditorProvider>;
 }
