@@ -42,6 +42,8 @@ interface ContextProps {
         tags: string
     ) => void;
     popElement: (id: string) => void;
+    createPost: (id: string) => void;
+    editPost: (post: PostEntity) => void;
 }
 
 export const EditorContext = createContext<ContextProps | undefined>(undefined);
@@ -64,6 +66,22 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         );
 
         return { newEntities, changeIndex };
+    }, []);
+
+    /** Setup the post id to edit (used to create a new post) */
+    const createPost = useCallback((id: string) => {
+        setEditorState((prev) => ({
+            _id: id,
+            title: "",
+            metadescription: "",
+            tags: [],
+            entities: [],
+        }));
+    }, []);
+
+    /** Set up the whole post to be edited */
+    const editPost = useCallback((post: PostEntity) => {
+        setEditorState(post);
     }, []);
 
     /**
@@ -113,6 +131,9 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
         []
     );
 
+    /**
+     * Handle the change of the metada
+     */
     const changeMetaInfo = useCallback(
         (title: string, metadescription: string, tags: string) => {
             const tagsArr = tags.split(",");
@@ -207,6 +228,8 @@ const EditorProvider = ({ children }: { children: ReactNode }) => {
                 pushElement,
                 changeMetaInfo,
                 popElement,
+                createPost,
+                editPost,
             }}
         >
             {children}
