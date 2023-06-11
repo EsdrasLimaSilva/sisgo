@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { PostEntity } from "@/contexts/EditorContext";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 //posts
 export async function GET() {
@@ -25,9 +26,7 @@ export async function POST() {
         const response = await db.collection("posts").insertOne({});
 
         return NextResponse.json(response);
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 
 export async function PUT(req: NextRequest) {
@@ -50,7 +49,21 @@ export async function PUT(req: NextRequest) {
         );
 
         return NextResponse.json("ok");
+    } catch (err) {}
+}
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+
+        const mongo = await clientPromise;
+        const db = mongo.db("sisgo");
+
+        await db.collection("posts").deleteOne({ _id: new ObjectId(id!) });
+
+        return NextResponse.json("ok");
     } catch (err) {
-        console.log(err);
+        console.log("error");
     }
 }

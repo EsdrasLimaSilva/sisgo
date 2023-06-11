@@ -1,0 +1,44 @@
+@import "./variables.module.scss";
+
+.container {
+}
+
+.header {
+    background-color: $white;
+    padding: 16px 0;
+    box-shadow: 0px 1px 2px $transparent;
+    margin: 0 0 24px 0;
+
+    h1 {
+        @include FLEX(column, center, center);
+        color: $primary-600;
+        font-weight: 500;
+    }
+}
+
+.homePost {
+    @include FLEX(column, center, center);
+    user-select: none;
+    background-color: $white;
+    width: 260px;
+    height: 120px;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0px 1px 2px $transparent;
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+
+    h2 {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    &:hover {
+        background-color: $primary-500;
+
+        h2 {
+            font-size: 1rem;
+            color: $white;
+        }
+    }
+}
