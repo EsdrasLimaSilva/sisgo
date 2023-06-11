@@ -1,3 +1,4 @@
+import PagePost from "@/components/PagePost";
 import { getSpecificMongoPost } from "@/services/mongoClient";
 
 export default async function PostPageLayout({
@@ -6,7 +7,6 @@ export default async function PostPageLayout({
     params: { postId: string };
 }) {
     const postData = await getSpecificMongoPost(postId);
-    console.log(postData);
 
-    return <h1>{postData.title}</h1>;
+    return <PagePost post={postData} />;
 }
