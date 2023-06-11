@@ -2,6 +2,26 @@ import { PostEntity } from "@/contexts/EditorContext";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
+export async function getSpecificMongoPost(postId: string) {
+    try {
+        const mongo = await clientPromise;
+        const db = mongo.db("sisgo");
+
+        const document = (
+            (await db
+                .collection("posts")
+                .find({ _id: new ObjectId(postId) })
+                .toArray()) as unknown[]
+        )[0];
+
+        const post = document as PostEntity;
+
+        return post;
+    } catch (err) {
+        throw err;
+    }
+}
+
 export async function getMongoPosts(offset: number = 0, limit: number = 10) {
     try {
         const mongo = await clientPromise;

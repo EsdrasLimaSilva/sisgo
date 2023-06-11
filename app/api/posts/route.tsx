@@ -26,9 +26,7 @@ export async function POST() {
         const response = await db.collection("posts").insertOne({});
 
         return NextResponse.json(response);
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 
 export async function PUT(req: NextRequest) {
@@ -51,9 +49,7 @@ export async function PUT(req: NextRequest) {
         );
 
         return NextResponse.json("ok");
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 
 export async function DELETE(req: NextRequest) {
