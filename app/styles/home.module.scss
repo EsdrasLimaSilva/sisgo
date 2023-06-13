@@ -1,6 +1,8 @@
 @import "./variables.module.scss";
 
 .container {
+    @include FLEX(row, flex-start, flex-start, 8px);
+    flex-wrap: wrap;
 }
 
 .header {
