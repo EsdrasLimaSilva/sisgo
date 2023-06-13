@@ -6,7 +6,6 @@ import EditorElement from "@/components/EditorElement";
 import ImageElement from "@/components/ImageElement";
 import { FaSpinner } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { editMongoPost } from "@/app/services/mongoClient";
 
 export default function Editor() {
     const {
@@ -46,7 +45,13 @@ export default function Editor() {
         try {
             // (overlayRef.current! as HTMLDivElement).style.display = "";
             setpostState((prev) => ({ ...prev, publishing: true }));
-            await editMongoPost(postEntity);
+            await fetch("/api/posts", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(postEntity),
+            });
 
             alert("Tudo certo!");
         } catch (err) {

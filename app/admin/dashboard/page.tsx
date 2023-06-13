@@ -1,7 +1,7 @@
 import styles from "@/app/styles/dashboard.module.scss";
 import Dashboard from "@/components/Dashboard";
 import { PostEntity } from "@/contexts/EditorContext";
-import { getMongoPosts } from "@/services/mongoClient";
+import { getMongoPosts } from "@/lib/mongoClient";
 
 export default async function DashboardPage() {
     let posts: PostEntity[] = [];

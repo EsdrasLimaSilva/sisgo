@@ -1,5 +1,5 @@
 import HomePost from "@/components/HomePost";
-import { getMongoPosts } from "@/services/mongoClient";
+import { getMongoPosts } from "@/lib/mongoClient";
 import styles from "@/app/styles/home.module.scss";
 
 export default async function Home() {

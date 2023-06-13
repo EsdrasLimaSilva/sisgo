@@ -1,5 +1,5 @@
 import PagePost from "@/components/PagePost";
-import { getSpecificMongoPost } from "@/services/mongoClient";
+import { getSpecificMongoPost } from "@/lib/mongoClient";
 
 export default async function PostPageLayout({
     params: { postId },

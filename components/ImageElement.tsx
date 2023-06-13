@@ -3,6 +3,7 @@
 import { FaTrash } from "react-icons/fa";
 import styles from "@/app/styles/editor.module.scss";
 import { ChangeEvent, use, useRef } from "react";
+import Image from "next/image";
 
 interface Props {
     id: string;
@@ -37,7 +38,7 @@ export default function ImageElement({
                 </button>
             </header>
 
-            <img src={url} alt={alt} />
+            <Image src={url} alt={alt} />
             <input
                 id={id}
                 ref={urlRef}
