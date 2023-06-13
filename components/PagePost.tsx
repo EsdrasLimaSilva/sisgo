@@ -4,8 +4,6 @@ import styles from "@/app/styles/postPage.module.scss";
 import Link from "next/link";
 
 export default function PagePost({ post }: { post: PostEntity }) {
-    console.log(post.entities);
-
     return (
         <>
             <header className={styles.header}>
@@ -21,9 +19,11 @@ export default function PagePost({ post }: { post: PostEntity }) {
                         return element;
                     }
 
-                    const element = createElement(entity.type, {
-                        children: [entity.content],
-                    });
+                    const element = createElement(
+                        entity.type,
+                        {},
+                        entity.content
+                    );
                     return element;
                 })}
             </main>
