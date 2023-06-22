@@ -13,9 +13,21 @@ export default async function Home() {
                 <h1>Sisgo</h1>
             </header>
             <main className={styles.container}>
-                {posts.map((post) => (
-                    <HomePost key={post._id} post={post} />
-                ))}
+                <p>
+                    Este blog tem como objetivo discutir os mais variados
+                    assuntos tratados no curso de Análise e Desenvolvimento de
+                    Sistemas. Ajudando estudantes a superarem mais facilmente
+                    algumas etapas de todo o processo de formação.
+                </p>
+
+                <section className={styles.postsSection}>
+                    <h2>Recentes</h2>
+                    <div className={styles.postsContainer}>
+                        {posts.map((post) => (
+                            <HomePost key={post._id} post={post} />
+                        ))}
+                    </div>
+                </section>
             </main>
         </>
     );
