@@ -9,14 +9,14 @@
 }
 
 .header {
-    background-color: $white;
+    background-color: $primary-600;
+    color: $white;
     padding: 16px 0;
     box-shadow: 0px 1px 2px $transparent;
     margin: 0 0 24px 0;
 
     h1 {
         @include FLEX(column, center, center);
-        color: $primary-600;
         font-weight: bolder;
         font-style: italic;
     }
